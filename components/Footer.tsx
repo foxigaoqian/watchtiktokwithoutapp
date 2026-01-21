@@ -1,27 +1,32 @@
 
 import React from 'react';
+import { PageView } from '../App';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  setView: (view: PageView) => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-white border-t border-gray-100 py-12">
+    <footer className="bg-white border-t border-gray-100 py-12 mt-auto">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col items-center md:items-start">
-             <div className="flex items-center gap-2 mb-2">
+             <button onClick={() => setView('home')} className="flex items-center gap-2 mb-2 hover:opacity-80">
               <div className="w-6 h-6 rounded bg-black flex items-center justify-center">
                 <span className="text-white text-[10px] font-bold">TT</span>
               </div>
               <span className="font-bold text-lg">WatchTikTokWithoutApp.com</span>
-            </div>
+            </button>
             <p className="text-sm text-gray-400">Making the web more accessible, one link at a time.</p>
           </div>
           
           <div className="flex gap-8">
-            <a href="#" className="text-sm text-gray-500 hover:text-black transition-colors">Terms</a>
-            <a href="#" className="text-sm text-gray-500 hover:text-black transition-colors">Privacy</a>
-            <a href="#" className="text-sm text-gray-500 hover:text-black transition-colors">Contact</a>
+            <button onClick={() => setView('terms')} className="text-sm text-gray-500 hover:text-black transition-colors">Terms</button>
+            <button onClick={() => setView('privacy')} className="text-sm text-gray-500 hover:text-black transition-colors">Privacy</button>
+            <button onClick={() => setView('contact')} className="text-sm text-gray-500 hover:text-black transition-colors">Contact</button>
           </div>
         </div>
         
