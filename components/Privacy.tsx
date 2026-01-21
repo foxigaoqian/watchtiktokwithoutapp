@@ -10,7 +10,7 @@ export const Privacy: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </button>
         <h1 className="text-4xl font-black mb-8">Privacy Policy</h1>
         <div className="prose prose-slate max-w-none">
-          <p className="text-gray-500 mb-6">Last Updated: October 2023</p>
+          <p className="text-gray-500 mb-6">Last Updated: January 21, 2026</p>
 
           <h2 className="text-2xl font-bold mt-8 mb-4">1. Information We Collect</h2>
           <p>WatchTikTokWithoutApp.com does not collect, store, or share any personal information. The tool processes URL strings client-side or via simple redirect logic. We do not maintain logs of URLs entered into our tool.</p>
