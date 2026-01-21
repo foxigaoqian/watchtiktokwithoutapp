@@ -19,6 +19,7 @@ export const Header: React.FC<HeaderProps> = ({ onHome }) => {
         </button>
         
         <nav className="hidden md:flex items-center gap-8">
+          <button onClick={onHome} className="text-sm font-medium text-gray-600 hover:text-black transition-colors">Tool</button>
           <a href='https://ko-fi.com/Y8Y11S17NY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
           <a href="#how-it-works" onClick={() => onHome()} className="text-sm font-medium text-gray-600 hover:text-black transition-colors">How it Works</a>
           <a href="#faq" onClick={() => onHome()} className="text-sm font-medium text-gray-600 hover:text-black transition-colors">FAQ</a>
