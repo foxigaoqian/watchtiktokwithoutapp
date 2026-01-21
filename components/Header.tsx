@@ -18,11 +18,14 @@ export const Header: React.FC<HeaderProps> = ({ onHome }) => {
           </span>
         </button>
         
-        <nav className="hidden md:flex items-center gap-8">
-          <button onClick={onHome} className="text-sm font-medium text-gray-600 hover:text-black transition-colors">Tool</button>
-          <a href="#how-it-works" onClick={() => onHome()} className="text-sm font-medium text-gray-600 hover:text-black transition-colors">How it Works</a>
-          <a href="#faq" onClick={() => onHome()} className="text-sm font-medium text-gray-600 hover:text-black transition-colors">FAQ</a>
-        </nav>
+        <a href="https://ko-fi.com/Y8Y11S17NY" target="_blank" rel="noopener noreferrer" className="flex items-center">
+          <img 
+            src="https://storage.ko-fi.com/cdn/kofi5.png?v=6" 
+            alt="Buy Me a Coffee at ko-fi.com"
+            className="h-9 border-0"
+            style={{ height: '36px', border: '0px' }}
+          />
+        </a>
       </div>
     </header>
   );
