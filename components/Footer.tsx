@@ -35,7 +35,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             © {currentYear} WatchTikTokWithoutApp.com – All rights reserved. 
             <br className="md:hidden" />
             <span className="hidden md:inline mx-2">•</span>
-            Not affiliated with TikTok or ByteDance.
+            TikTok is a registered trademark of ByteDance. This website is not affiliated with, endorsed by, or sponsored by TikTok or ByteDance.
           </p>
         </div>
       </div>
