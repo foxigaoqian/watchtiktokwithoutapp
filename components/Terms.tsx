@@ -10,7 +10,7 @@ export const Terms: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </button>
         <h1 className="text-4xl font-black mb-8">Terms of Service</h1>
         <div className="prose prose-slate max-w-none">
-          <p className="text-gray-500 mb-6">Last Updated: October 2023</p>
+          <p className="text-gray-500 mb-6">Last Updated: January 21, 2026</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4">1. Acceptance of Terms</h2>
           <p>By accessing WatchTikTokWithoutApp.com, you agree to comply with and be bound by these Terms of Service. If you do not agree, please do not use the service.</p>
