@@ -3,6 +3,16 @@ import React from 'react';
 
 export const SEOContent: React.FC = () => {
   return (
+    <script>
+  atOptions = {
+    'key' : 'ae7cca373cbb95eff2ab97400bf42d32',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/ae7cca373cbb95eff2ab97400bf42d32/invoke.js"></script>
     <div className="max-w-4xl mx-auto prose prose-slate prose-headings:font-black prose-p:text-gray-600 prose-li:text-gray-600">
       <div className="grid md:grid-cols-2 gap-12 items-start">
         <div>
