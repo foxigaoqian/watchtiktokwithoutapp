@@ -37,6 +37,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             <span className="hidden md:inline mx-2">•</span>
             TikTok is a registered trademark of ByteDance. This website is not affiliated with, endorsed by, or sponsored by TikTok or ByteDance.
           </p>
+          <p><a href="https://spanishwordunscrambler.com/">spanish word unscrambler</a><a href="https://lewisstructuregenerator.org/">lewis structure generator</a></p>
         </div>
       </div>
     </footer>
