@@ -1,0 +1,7 @@
+body {
+  font-family: 'Inter', sans-serif;
+  scroll-behavior: smooth;
+}
+.tiktok-gradient {
+  background: linear-gradient(45deg, #00f2ea 0%, #ff0050 100%);
+}

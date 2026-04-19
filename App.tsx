@@ -52,7 +52,8 @@ const HomePage: React.FC<{ t: Locale; setView: (v: PageView) => void }> = ({ t, 
 
 const LocalePage: React.FC = () => {
   const { lang } = useParams<{ lang: string }>();
-  const t = locales[lang ?? 'en'] ?? locales['en'];
+  const localeKey = lang === 'pt-br' ? 'pt-BR' : (lang ?? 'en');
+  const t = locales[localeKey] ?? locales['en'];
   const [view, setView] = useState<PageView>('home');
   const navigate = useNavigate();
 
@@ -90,9 +91,7 @@ const App: React.FC = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<LocalePage />} />
-      {localeRoutes.filter(r => r.path !== '/').map(r => (
-        <Route key={r.path} path={r.path} element={<LocalePage />} />
-      ))}
+      <Route path="/:lang" element={<LocalePage />} />
     </Routes>
   </BrowserRouter>
 );
