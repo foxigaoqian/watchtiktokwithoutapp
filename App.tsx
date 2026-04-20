@@ -14,6 +14,10 @@ import { VideoIdExtractor } from './components/VideoIdExtractor';
 import { ProfileLinkGenerator } from './components/ProfileLinkGenerator';
 import { BulkLinkCleaner } from './components/BulkLinkCleaner';
 import { locales, localeRoutes, Locale } from './i18n';
+import { UsernameExtractorPage } from './components/UsernameExtractorPage';
+import { VideoIdExtractorPage } from './components/VideoIdExtractorPage';
+import { ProfileLinkGeneratorPage } from './components/ProfileLinkGeneratorPage';
+import { BulkLinkCleanerPage } from './components/BulkLinkCleanerPage';
 
 export type PageView = 'home' | 'terms' | 'privacy' | 'contact';
 
@@ -87,11 +91,47 @@ const LocalePage: React.FC = () => {
   );
 };
 
+const ToolPage: React.FC = () => {
+  const { lang, tool } = useParams<{ lang?: string; tool: string }>();
+  const localeKey = lang === 'pt-br' ? 'pt-BR' : (lang ?? 'en');
+  const t = locales[localeKey] ?? locales['en'];
+
+  useEffect(() => {
+    document.documentElement.lang = t.lang;
+    document.documentElement.dir = t.dir;
+    window.scrollTo(0, 0);
+  }, [t]);
+
+  const base = lang ? `/${lang}` : '';
+  const navigate = useNavigate();
+
+  const inner = () => {
+    switch (tool) {
+      case 'username-extractor':    return <UsernameExtractorPage t={t} />;
+      case 'video-id-extractor':    return <VideoIdExtractorPage t={t} />;
+      case 'profile-link-generator': return <ProfileLinkGeneratorPage t={t} />;
+      case 'bulk-link-cleaner':     return <BulkLinkCleanerPage t={t} />;
+      default: navigate(base || '/'); return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header onHome={() => navigate(base || '/')} t={t} />
+      <main className="flex-grow">{inner()}</main>
+      <Footer setView={() => navigate(base || '/')} />
+    </div>
+  );
+};
+
+
 const App: React.FC = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<LocalePage />} />
       <Route path="/:lang" element={<LocalePage />} />
+      <Route path="/tools/:tool" element={<ToolPage />} />
+      <Route path="/:lang/tools/:tool" element={<ToolPage />} />
     </Routes>
   </BrowserRouter>
 );

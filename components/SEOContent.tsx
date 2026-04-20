@@ -45,5 +45,11 @@ export const SEOContent: React.FC<{ t: Locale }> = ({ t }) => (
         <p className="text-gray-600">{t.seo.pNoAccount}</p>
       </div>
     </div>
+    {t.seo.h2Download && (
+      <div className="mt-12 p-8 bg-gray-50 rounded-2xl border border-gray-100">
+        <h2 className="text-2xl font-black mb-4">{t.seo.h2Download}</h2>
+        <p className="text-gray-600">{t.seo.pDownload}</p>
+      </div>
+    )}
   </div>
 );
