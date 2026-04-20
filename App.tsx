@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useParams, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams, useNavigate, Link } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { TiktokTool } from './components/TiktokTool';
@@ -21,7 +21,10 @@ import { BulkLinkCleanerPage } from './components/BulkLinkCleanerPage';
 
 export type PageView = 'home' | 'terms' | 'privacy' | 'contact';
 
-const HomePage: React.FC<{ t: Locale; setView: (v: PageView) => void }> = ({ t, setView }) => (
+const HomePage: React.FC<{ t: Locale; setView: (v: PageView) => void }> = ({ t, setView }) => {
+  const { lang } = useParams<{ lang?: string }>();
+  const base = lang ? `/${lang}` : '';
+  return (
   <>
     <Hero t={t} />
     <div className="container mx-auto px-4 -mt-16 md:-mt-24 relative z-10">
@@ -44,15 +47,24 @@ const HomePage: React.FC<{ t: Locale; setView: (v: PageView) => void }> = ({ t, 
           <p className="text-gray-500">{t.tools.sectionSubtitle}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          <UsernameExtractor />
-          <VideoIdExtractor />
-          <ProfileLinkGenerator />
-          <BulkLinkCleaner />
+          {([
+            { slug: 'username-extractor', tp: t.toolPages.usernameExtractor },
+            { slug: 'video-id-extractor', tp: t.toolPages.videoIdExtractor },
+            { slug: 'profile-link-generator', tp: t.toolPages.profileLinkGenerator },
+            { slug: 'bulk-link-cleaner', tp: t.toolPages.bulkLinkCleaner },
+          ] as const).map(({ slug, tp }) => (
+            <Link key={slug} to={`${base}/tools/${slug}`} className="block bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:border-pink-300 hover:shadow-xl transition-all group">
+              <h3 className="text-lg font-black mb-2 group-hover:text-pink-600 transition-colors">{tp.h1}</h3>
+              <p className="text-sm text-gray-500 mb-4">{tp.subtitle}</p>
+              <span className="text-sm font-bold text-black group-hover:text-pink-600 transition-colors">Try it →</span>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
   </>
-);
+  );
+};
 
 const LocalePage: React.FC = () => {
   const { lang } = useParams<{ lang: string }>();
