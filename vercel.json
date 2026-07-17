@@ -1,0 +1,27 @@
+{
+  "redirects": [
+    { "source": "/vi", "destination": "/", "permanent": true },
+    { "source": "/vi/:path*", "destination": "/:path*", "permanent": true },
+    { "source": "/id", "destination": "/", "permanent": true },
+    { "source": "/id/:path*", "destination": "/:path*", "permanent": true },
+    { "source": "/tl", "destination": "/", "permanent": true },
+    { "source": "/tl/:path*", "destination": "/:path*", "permanent": true },
+    { "source": "/ur", "destination": "/", "permanent": true },
+    { "source": "/ur/:path*", "destination": "/:path*", "permanent": true },
+    { "source": "/pt-br", "destination": "/", "permanent": true },
+    { "source": "/pt-br/:path*", "destination": "/:path*", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/tools/:path*", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}
