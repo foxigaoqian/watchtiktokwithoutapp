@@ -1,5 +1,22 @@
-
 import { TikTokLinkInfo } from '../types';
+
+const ALLOWED_HOSTS = new Set([
+  'tiktok.com',
+  'www.tiktok.com',
+  'm.tiktok.com',
+  'vm.tiktok.com',
+  'vt.tiktok.com',
+  't.tiktok.com',
+]);
+
+export function isTikTokShortLink(value: string): boolean {
+  try {
+    const parsed = new URL(value.trim());
+    return parsed.protocol === 'https:' && ['vm.tiktok.com', 'vt.tiktok.com', 't.tiktok.com'].includes(parsed.hostname.toLowerCase());
+  } catch {
+    return false;
+  }
+}
 
 export const parseTikTokLink = (url: string): TikTokLinkInfo => {
   const trimmedUrl = url.trim();
@@ -9,32 +26,44 @@ export const parseTikTokLink = (url: string): TikTokLinkInfo => {
     embedUrl: '',
     videoId: null,
     isValid: false,
-    type: 'unknown'
+    type: 'unknown',
   };
 
   if (!trimmedUrl) return info;
 
-  // Regex patterns
-  const fullLinkPattern = /tiktok\.com\/@([^\/]+)\/video\/(\d+)/;
-  const shortLinkPattern = /(vm|vt|t)\.tiktok\.com\/[\w\d]+/;
+  let parsed: URL;
+  try {
+    parsed = new URL(trimmedUrl);
+  } catch {
+    return info;
+  }
 
-  const fullMatch = trimmedUrl.match(fullLinkPattern);
-  const shortMatch = trimmedUrl.match(shortLinkPattern);
+  const hostname = parsed.hostname.toLowerCase().replace(/\.$/, '');
+  if (parsed.protocol !== 'https:' || !ALLOWED_HOSTS.has(hostname)) return info;
 
-  if (fullMatch) {
-    const username = fullMatch[1];
-    const videoId = fullMatch[2];
+  const videoMatch = parsed.pathname.match(/^\/@([^/]+)\/video\/(\d+)/i);
+  if (videoMatch) {
+    const username = decodeURIComponent(videoMatch[1]);
+    const videoId = videoMatch[2];
     info.videoId = videoId;
     info.isValid = true;
     info.type = 'full';
-    info.cleanUrl = `https://www.tiktok.com/@${username}/video/${videoId}?is_copy_url=1&is_from_webapp=1`;
+    info.cleanUrl = `https://www.tiktok.com/@${encodeURIComponent(username)}/video/${videoId}`;
     info.embedUrl = `https://www.tiktok.com/embed/v2/${videoId}`;
-  } else if (shortMatch) {
+    return info;
+  }
+
+  const profileMatch = parsed.pathname.match(/^\/@([^/]+)\/?$/i);
+  if (profileMatch) {
+    const username = decodeURIComponent(profileMatch[1]);
     info.isValid = true;
+    info.type = 'full';
+    info.cleanUrl = `https://www.tiktok.com/@${encodeURIComponent(username)}`;
+    return info;
+  }
+
+  if (isTikTokShortLink(trimmedUrl)) {
     info.type = 'short';
-    // For short links, we can't get the clean URL without expanding them on the backend (CORS)
-    // So we just provide the link as is but with a warning or suggestion to use the tool
-    info.cleanUrl = trimmedUrl; 
   }
 
   return info;
