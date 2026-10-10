@@ -103,16 +103,27 @@ const LocalePage: React.FC = () => {
   );
 };
 
+const toolPageMetaKey: Record<string, 'usernameExtractor' | 'videoIdExtractor' | 'profileLinkGenerator' | 'bulkLinkCleaner'> = {
+  'username-extractor': 'usernameExtractor',
+  'video-id-extractor': 'videoIdExtractor',
+  'profile-link-generator': 'profileLinkGenerator',
+  'bulk-link-cleaner': 'bulkLinkCleaner',
+};
+
 const ToolPage: React.FC = () => {
   const { lang, tool } = useParams<{ lang?: string; tool: string }>();
   const localeKey = lang === 'pt-br' ? 'pt-BR' : (lang ?? 'en');
   const t = locales[localeKey] ?? locales['en'];
 
   useEffect(() => {
+    const metaKey = toolPageMetaKey[tool];
+    const meta = metaKey ? t.toolPages[metaKey] : null;
+    document.title = meta ? meta.title : t.meta.title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', meta ? meta.description : t.meta.description);
     document.documentElement.lang = t.lang;
     document.documentElement.dir = t.dir;
     window.scrollTo(0, 0);
-  }, [t]);
+  }, [t, tool]);
 
   const base = lang ? `/${lang}` : '';
   const navigate = useNavigate();

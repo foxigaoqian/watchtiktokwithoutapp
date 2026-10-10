@@ -12,6 +12,41 @@ const MAX_REDIRECTS = 5;
 const TIMEOUT_MS = 8000;
 const buckets = new Map();
 
+// --- Server-side result cache ---
+// Short-link contents almost never change, so resolved results are memoized
+// in memory for 6 hours, keyed by the normalized input URL and by the
+// resolved target URL. NOTE: this is per-process memory. On Vercel serverless
+// every function instance has its own memory, so cache hits are NOT shared
+// across instances (the `buckets` rate-limit map above has the same
+// limitation). For cross-instance sharing, use Vercel KV or Redis instead.
+const resultCache = new Map(); // key -> { result, expiresAt }
+const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+const MAX_CACHE_ENTRIES = 2000;
+
+function getCachedResult(key) {
+  const entry = resultCache.get(key);
+  if (!entry) return null;
+  if (entry.expiresAt <= Date.now()) {
+    resultCache.delete(key);
+    return null;
+  }
+  return entry.result;
+}
+
+function setCachedResult(key, result) {
+  if (resultCache.size >= MAX_CACHE_ENTRIES) {
+    const now = Date.now();
+    for (const [k, v] of resultCache) {
+      if (v.expiresAt <= now) resultCache.delete(k);
+      if (resultCache.size < MAX_CACHE_ENTRIES) break;
+    }
+    if (resultCache.size >= MAX_CACHE_ENTRIES) {
+      resultCache.delete(resultCache.keys().next().value);
+    }
+  }
+  resultCache.set(key, { result, expiresAt: Date.now() + CACHE_TTL_MS });
+}
+
 function clientKey(request) {
   const forwarded = String(request.headers['x-forwarded-for'] || '').split(',')[0].trim();
   return forwarded || request.socket?.remoteAddress || 'unknown';
@@ -83,6 +118,10 @@ function cleanFinalUrl(value) {
 }
 
 async function expand(rawUrl) {
+  const cacheKey = typeof rawUrl === 'string' ? rawUrl.trim() : '';
+  const cached = cacheKey ? getCachedResult(cacheKey) : null;
+  if (cached) return cached;
+
   let current = parseTikTokUrl(rawUrl);
 
   for (let index = 0; index <= MAX_REDIRECTS; index += 1) {
@@ -110,7 +149,14 @@ async function expand(rawUrl) {
       throw new Error(`TikTok returned HTTP ${response.status}.`);
     }
 
-    return cleanFinalUrl(current.toString());
+    const result = cleanFinalUrl(current.toString());
+    if (cacheKey) {
+      setCachedResult(cacheKey, result);
+      // Also index by the resolved target URL so different short links
+      // resolving to the same video share one cached entry.
+      setCachedResult(result.cleanUrl, result);
+    }
+    return result;
   }
 
   throw new Error('The TikTok link redirected too many times.');
